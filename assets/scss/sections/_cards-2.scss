@@ -1,0 +1,134 @@
+// main: ../main.scss
+/*--------------------------------------------------------------
+# Cards 2 Section
+--------------------------------------------------------------*/
+.cards-2 {
+  .container-fluid {
+    padding: 0;
+  }
+
+  .cards-slider {
+    overflow: hidden;
+  }
+
+  .swiper-wrapper {
+    height: auto !important;
+    transition-timing-function: linear !important;
+  }
+
+  .card-item {
+    position: relative;
+    min-height: 540px;
+    overflow: hidden;
+    transition: all 0.3s ease-in-out;
+
+    &:hover {
+      .card-bg {
+        transform: scale(1.1);
+      }
+
+      .card-content {
+        background: rgba(0, 0, 0, 0.7);
+      }
+    }
+
+    .card-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      transition: transform 0.3s ease-in-out;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.4);
+        transition: background 0.3s ease-in-out;
+      }
+    }
+
+    &:hover .card-bg::before {
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    .card-content {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      padding: 30px;
+      background: rgba(0, 0, 0, 0.5);
+      transition: background 0.3s ease-in-out;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .icon {
+      flex-shrink: 0;
+      width: 50px;
+      height: 50px;
+      background: var(--accent-color);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--contrast-color);
+      font-size: 24px;
+    }
+
+    h3 {
+      color: var(--contrast-color);
+      font-size: 20px;
+      font-weight: 700;
+      margin: 0;
+    }
+  }
+
+  @media (max-width: 1199px) {
+    .card-item {
+      height: 350px;
+
+      .card-content {
+        padding: 25px;
+      }
+
+      .icon {
+        width: 45px;
+        height: 45px;
+        font-size: 20px;
+      }
+
+      h3 {
+        font-size: 18px;
+      }
+    }
+  }
+
+  @media (max-width: 767px) {
+    .card-item {
+      height: 300px;
+
+      .card-content {
+        padding: 20px;
+      }
+
+      .icon {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+      }
+
+      h3 {
+        font-size: 16px;
+      }
+    }
+  }
+}
