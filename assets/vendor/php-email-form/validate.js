@@ -64,11 +64,35 @@
     })
     .then(data => {
       thisForm.querySelector('.loading').classList.remove('d-block');
-      if (data.trim() == 'OK') {
+      
+      // Try to parse as JSON first
+      let responseData;
+      try {
+        responseData = JSON.parse(data);
+      } catch (e) {
+        responseData = null;
+      }
+      
+      // Check for JSON success response
+      if (responseData && responseData.success === true) {
+        thisForm.querySelector('.sent-message').classList.add('d-block');
+        thisForm.reset(); 
+      }
+      // Check for traditional 'OK' response
+      else if (data.trim() == 'OK') {
         thisForm.querySelector('.sent-message').classList.add('d-block');
         thisForm.reset(); 
       } else {
-        throw new Error(data ? data : 'Form submission failed and no error message returned from: ' + action); 
+        // Handle error cases
+        let errorMessage = 'Form submission failed';
+        if (responseData && responseData.message) {
+          errorMessage = responseData.message;
+        } else if (responseData && responseData.error) {
+          errorMessage = responseData.error;
+        } else if (data) {
+          errorMessage = data;
+        }
+        throw new Error(errorMessage + ' (from: ' + action + ')'); 
       }
     })
     .catch((error) => {
@@ -78,7 +102,32 @@
 
   function displayError(thisForm, error) {
     thisForm.querySelector('.loading').classList.remove('d-block');
-    thisForm.querySelector('.error-message').innerHTML = error;
+    
+    let errorMessage = error;
+    
+    // If error is an Error object, get the message
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    
+    // Try to parse JSON error messages and make them user-friendly
+    try {
+      const jsonError = JSON.parse(errorMessage);
+      if (jsonError.message) {
+        errorMessage = jsonError.message;
+      } else if (jsonError.error) {
+        errorMessage = jsonError.error;
+      }
+    } catch (e) {
+      // Not JSON, use as is
+    }
+    
+    // Make sure we don't show raw JSON to users
+    if (errorMessage.includes('{"success"') && errorMessage.includes('"data"')) {
+      errorMessage = 'There was an issue processing your request. Please try again.';
+    }
+    
+    thisForm.querySelector('.error-message').innerHTML = errorMessage;
     thisForm.querySelector('.error-message').classList.add('d-block');
   }
 
